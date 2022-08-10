@@ -23,7 +23,7 @@ export class ProductController {
     @httpGet('/')
     async getAllProducts(@request() req: Request, @response() res: Response) {
         const products = await this.service.getAllProducts();
-        return res.json(ok(products, 'Successfully retrieved all products'));
+        return res.json(ok(products, 'Successfully retrieved all products with Knex'));
     }
 
     @httpGet('/:id')

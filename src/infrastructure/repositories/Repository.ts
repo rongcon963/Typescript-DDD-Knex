@@ -6,20 +6,22 @@ import { IDataMapper } from '../../core/IDataMapper';
 @injectable()
 export class Repository<TDomainEntity>
 implements IRepository<TDomainEntity> {
+  private readonly tableName: string;
   private readonly collectionInstance: Knex;
   private readonly dataMapper: IDataMapper<TDomainEntity>;
 
   constructor(
+    @unmanaged() tableName: string,
     @unmanaged() collectionInstance: Knex,
     @unmanaged() dataMapper: IDataMapper<TDomainEntity>,
   ) {
+    this.tableName = tableName;
     this.collectionInstance = collectionInstance;
     this.dataMapper = dataMapper;
   }
 
   async findAll(): Promise<TDomainEntity[]> {
-    const dbResult = await this.collectionInstance.select('*').from('product');
-    console.log(dbResult);
+    const dbResult = await this.collectionInstance.select('*').from(this.tableName);
     
     return dbResult.map((result) => this.dataMapper.toDomain(result));
   }

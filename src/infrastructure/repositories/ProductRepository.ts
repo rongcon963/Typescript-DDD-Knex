@@ -12,6 +12,6 @@ export class ProductRepository extends Repository<Product> implements IProductRe
     @inject(TYPES.Db) private readonly db: Knex,
     @inject(TYPES.ProductDataMapper) private readonly userDataMapper: IDataMapper<Product>
   ) {
-    super(db, userDataMapper);
+    super('product',db, userDataMapper);
   }
 }
