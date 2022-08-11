@@ -20,7 +20,7 @@ export class ProductDataMapper implements IDataMapper<Product> {
       guid: productEntity.guid,
       name: productEntity.name,
       description: productEntity.description,
-      instockQuantity: productEntity.instockQuantity,
+      instock_quantity: productEntity.instockQuantity,
       price: productEntity.price,
     };
   }

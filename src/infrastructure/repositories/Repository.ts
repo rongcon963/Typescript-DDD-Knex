@@ -27,10 +27,10 @@ implements IRepository<TDomainEntity> {
   }
 
   async findOneById(guid: string): Promise<TDomainEntity | null> {
-    // const dbResult = await this.collectionInstance.findOne({ guid });
-    // if (!dbResult) return null;
-    // return this.dataMapper.toDomain(dbResult);
-    return null;
+    const dbResult = await this.collectionInstance(this.tableName).where('guid', guid);
+    
+    if (!dbResult) return null;
+    return this.dataMapper.toDomain((dbResult as any)[0]);
   }
 
   async findUser(username: string): Promise<TDomainEntity | null> {
@@ -41,24 +41,23 @@ implements IRepository<TDomainEntity> {
   }
 
   async doesExists(guid: string): Promise<boolean> {
-    // const dbResult = await this.collectionInstance.findOne({ guid });
-    // return !!dbResult;
-    return false;
+    const dbResult = await this.collectionInstance(this.tableName).where('guid', guid);
+    return !!dbResult;
   }
 
   async save(entity: TDomainEntity): Promise<void> {
-    // const guid = (entity as any).guid;
-    // const exists = await this.doesExists(guid);
+    const guid = (entity as any).guid;
+    const exists = await this.doesExists(guid);
     
-    // if (!exists) {
-    //   await this.collectionInstance.insertOne(this.dataMapper.toDalEntity(entity));
-    //   return;
-    // }
-    // await this.collectionInstance.replaceOne({ guid }, this.dataMapper.toDalEntity(entity));
-    return;
+    if(exists) {
+      await this.collectionInstance(this.tableName).insert(this.dataMapper.toDalEntity(entity));
+      return;
+    }
+    await this.collectionInstance(this.tableName).where('guid', guid).update(this.dataMapper.toDalEntity(entity));
   }
 
   async delete(id: string): Promise<void> {
     //await this.collectionInstance.deleteOne({ guid: id });
+    await this.collectionInstance(this.tableName).where('guid', id).del();
   }
 }
