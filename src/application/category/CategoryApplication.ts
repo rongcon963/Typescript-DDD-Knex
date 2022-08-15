@@ -19,7 +19,7 @@ export class CategoryApplication {
 
     async getCategoryById(id: string): Promise<any | null> {
         const category = await this.categoryRepository.findOneById(id);
-        if (!category) throw new ApplicationError('404', 404, 'The user with the requested ID does not exist');
+        if (!category) throw new ApplicationError('404', 404, 'The category with the requested ID does not exist');
         return new CategoryDto(category.guid, category.name);
     }
 
@@ -33,7 +33,6 @@ export class CategoryApplication {
         const category = await this.categoryRepository.findOneById(id);
         if (!category) throw 'Category not found';
         
-        // copy userParam properties to user
         Object.assign(category, { name });
 
         await this.categoryRepository.save(category);

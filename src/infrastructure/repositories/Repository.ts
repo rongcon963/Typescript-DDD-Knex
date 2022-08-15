@@ -33,26 +33,6 @@ implements IRepository<TDomainEntity> {
     return this.dataMapper.toDomain((dbResult as any)[0]);
   }
 
-  async findById(id: string): Promise<TDomainEntity[] | null> {
-    const dbResult = await this.collectionInstance(this.tableName)
-                    .join('category', `${this.tableName}.category_id`, '=', 'category.id')
-                    .join('product', `${this.tableName}.product_id`, '=', 'product.id')
-                    .select('*')
-                    .where(`${this.tableName}.category_id`, id);
-    console.log(dbResult);
-    
-    if (!dbResult) return null;
-    return dbResult.map((result) => this.dataMapper.toDomain(result));
-    //return this.dataMapper.toDomain(dbResult);
-  }
-
-  async findUser(username: string): Promise<TDomainEntity | null> {
-    // const dbResult = await this.collectionInstance.findOne({ username });
-    // if (!dbResult) return null;
-    // return this.dataMapper.toDomain(dbResult);
-    return null;
-  }
-
   async doesExists(guid: string): Promise<boolean> {
     const dbResult = await this.collectionInstance(this.tableName).where('guid', guid);
     return !!dbResult;
@@ -70,7 +50,6 @@ implements IRepository<TDomainEntity> {
   }
 
   async delete(id: string): Promise<void> {
-    //await this.collectionInstance.deleteOne({ guid: id });
     await this.collectionInstance(this.tableName).where('guid', id).del();
   }
 }
